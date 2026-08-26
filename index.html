@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0d0f14">
+  <meta name="description" content="FlowLab — a creative memory and songwriting workspace.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="src/styles.css">
+  <title>FlowLab — Creative workspace</title>
+</head>
+<body>
+  <div id="app"><div class="boot-screen"><strong>FlowLab</strong><span>Loading your creative workspace…</span></div></div>
+  <script src="config.js"></script>
+  <script>
+    window.setTimeout(() => {
+      const root = document.getElementById('app');
+      if (root?.querySelector('.boot-screen')) {
+        root.innerHTML = '<div class="boot-screen error"><strong>FlowLab could not start.</strong><span>Open this project through Acode Preview or a web server. Do not use a file:// URL.</span></div>';
+      }
+    }, 7000);
+  </script>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+FlowLab 3.2.0 verification
+
+PASS
+- npm test: 12/12 passing
+- npm run check: PASS
+- npm run preflight: PASS
+- Project root is flat: index.html is at repository root
+- No Vite/build dependency
+- No nested FlowLab-production directory
+- No browser source contains GEMINI_API_KEY or Supabase secret-key variables
+- API routes are separated under /api for Vercel
+
+Acode test contract
+- Serve the project through Acode Preview (HTTP), not file://.
+- The same folder is the GitHub repository root.
+
+Production note
+- Vercel must still execute its own serverless runtime for /api/ai.js and /api/health.js.
+- Gemini and Supabase server values are supplied through Vercel Environment Variables.
+- The Supabase migration must be run once in the target project.
