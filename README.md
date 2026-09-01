@@ -1,74 +1,26 @@
-# FlowLab 3.2
+# FlowLab 4.0 — deploy package
 
-FlowLab is a local-first creative memory and songwriting workspace. It is designed around the workflow: **capture → connect → develop → version → revisit**.
+This package is intentionally flat: every project file is at the repository root. There is no `src/`, `api/`, `script/`, or `supabase/` folder to create in GitHub.
 
-## The simple phone workflow
+## Deploy to Vercel
 
-This project has **no Vite/build step**. The same project root is used in Acode, GitHub, and Vercel.
+1. Upload the contents of this package to the root of your GitHub repository.
+2. Import that GitHub repository into Vercel. Do not add a Build Command or Output Directory.
+3. In Vercel Environment Variables add `GEMINI_API_KEY`, `GEMINI_MODEL`, `SUPABASE_URL`, and `SUPABASE_PUBLISHABLE_KEY`.
+4. Put the same public Supabase URL and publishable key into `config.js` for browser auth/sync.
+5. Run `supabase.sql` once in the Supabase SQL Editor.
+6. Push the files to GitHub. Vercel will deploy automatically.
 
-### In Acode
+The old `vercel.json` runtime declaration is deliberately absent. Vercel supports Express deployment with zero configuration, and Node version is controlled by `package.json` instead.
 
-1. Open the **FlowLab folder itself**. Do not open `index.html` from a file manager.
-2. Open Acode's Preview for `index.html`. Acode's preview should serve the folder over HTTP so ES modules work.
-3. For cloud/auth testing on the phone, put your Supabase **project URL** and **publishable key** in `config.js`.
-4. For local-only testing, leave the placeholders untouched. The Idea Bank and songs still work locally.
+## Local/Acode preview
 
-Termux fallback:
+Open the project through Acode Preview or a web server. Do not use a `file://` URL. The frontend uses classic browser scripts, so it does not require a bundler.
 
-```bash
-cd /path/to/FlowLab
-npm run serve
-```
+## Security
 
-Then open `http://127.0.0.1:4173/` in Chrome.
+`GEMINI_API_KEY` is server-only. Never put it in `config.js` or client-side JavaScript. Supabase browser access uses the publishable key plus the signed-in user's JWT and is protected by RLS.
 
-## GitHub → Vercel
+## Health check
 
-Upload the **contents of this folder** to the root of your GitHub repository. There should be an `index.html` directly at the repository root—not another `FlowLab` folder around it.
-
-Connect that repository to Vercel. No build command is required because the frontend is static and Vercel serves the `/api/*.js` functions.
-
-## Supabase
-
-1. Create a Supabase project.
-2. Open SQL Editor.
-3. Run `supabase/migrations/001_initial.sql` once.
-4. Copy the project URL and **publishable key** into `config.js` for browser use.
-5. In Supabase Auth settings, configure your deployed site URL and allowed redirect URLs as appropriate for your project.
-
-The browser intentionally never contains a Supabase secret key.
-
-## Vercel environment variables
-
-Set these in the Vercel project settings:
-
-```text
-GEMINI_API_KEY=your Gemini API key
-GEMINI_MODEL=gemini-2.5-flash-lite
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_PUBLISHABLE_KEY=your Supabase publishable key
-```
-
-`GEMINI_API_KEY` stays server-side in the Vercel function. Do not put it in `config.js` or commit it to GitHub.
-
-## What is already implemented
-
-- Creative Idea Bank with hooks, concepts, phrases, melodies, unfinished lines, themes, references, snippets, voice notes, discarded versions and other fragments.
-- Local-first persistence with IndexedDB/localStorage.
-- Songs and immutable versions.
-- Explicit idea-to-song links.
-- Archive instead of destructive deletion.
-- Browser audio capture for melody/voice-note ideas.
-- Supabase Auth, Postgres, RLS, and private audio storage integration.
-- Vercel Gemini endpoint with session validation.
-- Offline-capable service worker that never caches `/api/*` responses.
-
-## Validation
-
-```bash
-npm run preflight
-npm test
-npm run check
-```
-
-There is intentionally no `npm run build`. The production frontend is plain static HTML/CSS/ES modules so the exact same files can be previewed from Acode and deployed by Vercel.
+After deployment, open `/api/health`. It should return JSON with `status: ok`.
