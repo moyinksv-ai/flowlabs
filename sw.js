@@ -1,4 +1,4 @@
-const CACHE = 'flowlab-4.0.0';
+const CACHE = 'flowlab-4.1.0';
 const SHELL = ['/', '/index.html', '/config.js', '/manifest.json', '/icon-192.png', '/icon-512.png', '/styles.css', '/domain.js', '/cloud.js', '/media-store.js', '/store.js', '/flowlab-app.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
